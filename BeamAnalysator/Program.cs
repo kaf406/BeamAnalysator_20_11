@@ -55,9 +55,18 @@ namespace BeamAnalysator
             for (var i = 0; i < values.Count; i++)
             {
                 var value = values[i];
-                if (value.Phi == wanted_phi || value.Phi == wanted_phi + 180)
+                if (value.Phi == wanted_phi)
                     values_65.Add(value);
+                if(value.Phi == wanted_phi + 180 && value.Theta != 0)
+                    values_65.Add(new PatternValue
+                    {
+                        Theta = -value.Theta,
+                        Phi = wanted_phi,
+                        Dir_db = value.Dir_db
+                    });
             }
+
+            values_65.Sort((v1, v2) => Comparer<double>.Default.Compare(v1.Theta, v2.Theta));
 
             using var writer = File.CreateText("Pattern65.txt");
 
